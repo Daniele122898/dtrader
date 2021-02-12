@@ -52,10 +52,10 @@ func request(endpoint string, httpMethod string, queryParams QueryParams, body i
 	// Close the body so we dont leak any mem
 	defer resp.Body.Close()
 
-	bytes, err := ioutil.ReadAll(resp.Body)
+	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	return bytes, nil
+	return b, nil
 }
