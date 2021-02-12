@@ -22,6 +22,9 @@ func postRequest(endpoint string, queryParams QueryParams, body interface{}) ([]
 
 func request(endpoint string, httpMethod string, queryParams QueryParams, body interface{}) ([]byte, error) {
 	url := endpoint
+	if queryParams != nil {
+		url += queryParams.parse()
+	}
 
 	var req *http.Request
 	var err error
