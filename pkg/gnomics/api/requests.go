@@ -1,4 +1,4 @@
-package gnomics
+package api
 
 import (
 	"bytes"
@@ -9,25 +9,9 @@ import (
 	"net/http"
 )
 
-var client = http.Client{}
-
-func prepareQueryForAuth(q *qp.QueryParams) error {
-	if *q == nil {
-		*q = make(map[string]string)
-	}
-	if err := injectApiKey(*q); err != nil {
-		return err
-	}
-	return nil
-}
-
 // Will execute a get-request, inject the api key if it exists and then parse the data.
-func getRequestParsed(endpoint string, queryParams qp.QueryParams, data *interface{}) error {
-	if err := prepareQueryForAuth(&queryParams); err != nil {
-		return err
-	}
-
-	resp, err := request(endpoint, http.MethodGet, queryParams, nil)
+func (g *Gnomics) getRequestParsed(endpoint string, queryParams qp.QueryParams, data *interface{}) error {
+	resp, err := g.request(endpoint, http.MethodGet, queryParams, nil)
 	if err != nil {
 		return err
 	}
@@ -36,28 +20,34 @@ func getRequestParsed(endpoint string, queryParams qp.QueryParams, data *interfa
 }
 
 // Will execute a getRequest and inject the api key if it exists
-func getRequest(endpoint string, queryParams qp.QueryParams) ([]byte, error) {
-	if err := prepareQueryForAuth(&queryParams); err != nil {
-		return nil, err
-	}
-
-	return request(endpoint, http.MethodGet, queryParams, nil)
+func (g *Gnomics) getRequest(endpoint string, queryParams qp.QueryParams) ([]byte, error) {
+	return g.request(endpoint, http.MethodGet, queryParams, nil)
 }
 
 // Will execute a postRequest and inject the api key if it exists
-func postRequest(endpoint string, queryParams qp.QueryParams, body interface{}) ([]byte, error) {
-	if err := prepareQueryForAuth(&queryParams); err != nil {
-		return nil, err
-	}
+func (g *Gnomics) postRequest(endpoint string, queryParams qp.QueryParams, body interface{}) ([]byte, error) {
+	return g.request(endpoint, http.MethodPost, queryParams, body)
+}
 
-	return request(endpoint, http.MethodPost, queryParams, body)
+func prepareQueryForAuth(q *qp.QueryParams, g *Gnomics) error {
+	if *q == nil {
+		*q = make(map[string]string)
+	}
+	if err := g.injectApiKey(*q); err != nil {
+		return err
+	}
+	return nil
 }
 
 // General request function. This just executes and passes the errors or data.
-func request(endpoint string, httpMethod string, queryParams qp.QueryParams, body interface{}) ([]byte, error) {
+func (g *Gnomics) request(endpoint string, httpMethod string, queryParams qp.QueryParams, body interface{}) ([]byte, error) {
+	if err := prepareQueryForAuth(&queryParams, g); err != nil {
+		return nil, err
+	}
+
 	url := endpoint
 	if queryParams != nil {
-		url += queryParams.parse()
+		url += queryParams.Parse()
 	}
 
 	var req *http.Request
@@ -79,7 +69,7 @@ func request(endpoint string, httpMethod string, queryParams qp.QueryParams, bod
 		return nil, err
 	}
 
-	resp, err := client.Do(req)
+	resp, err := g.httpClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

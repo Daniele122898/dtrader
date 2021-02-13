@@ -7,7 +7,7 @@ import (
 
 type QueryParams map[string]string
 
-func (q QueryParams) parse() string {
+func (q QueryParams) Parse() string {
 	if len(q) == 0 {
 		return ""
 	}
