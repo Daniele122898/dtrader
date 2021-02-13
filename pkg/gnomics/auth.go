@@ -26,7 +26,7 @@ func Authenticate(key string) error {
 	return nil
 }
 
-func InjectApiKey(q QueryParams) error {
+func injectApiKey(q QueryParams) error {
 	if q == nil {
 		return errors.New("query params was not initialized")
 	}

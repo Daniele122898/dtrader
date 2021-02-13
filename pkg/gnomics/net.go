@@ -14,7 +14,7 @@ func prepareQueryForAuth(q *QueryParams) error {
 	if *q == nil {
 		*q = make(map[string]string)
 	}
-	if err := InjectApiKey(*q); err != nil {
+	if err := injectApiKey(*q); err != nil {
 		return err
 	}
 	return nil

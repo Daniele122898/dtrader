@@ -1,6 +1,9 @@
 package gnomics
 
-import "strings"
+import (
+	"net/url"
+	"strings"
+)
 
 type QueryParams map[string]string
 
@@ -12,9 +15,9 @@ func (q QueryParams) parse() string {
 	var sb strings.Builder
 	sb.WriteString("?")
 	for param, val := range q {
-		sb.WriteString(param)
+		sb.WriteString(url.QueryEscape(param))
 		sb.WriteRune('=')
-		sb.WriteString(val)
+		sb.WriteString(url.QueryEscape(val))
 		sb.WriteRune('&')
 	}
 
