@@ -64,3 +64,10 @@ type CurrencyMetadata struct {
 	MarketsCount        string `json:"markets_count"`
 	CryptocontrolCoinID string `json:"cryptocontrol_coin_id"`
 }
+
+type CurrencySparkline struct {
+	Currency   string   `json:"currency"`
+	Timestamps []string `json:"timestamps"`
+	Prices     []string `json:"prices"`
+}
+
