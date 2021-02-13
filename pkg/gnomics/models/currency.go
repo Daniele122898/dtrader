@@ -1,13 +1,5 @@
 package models
 
-import "encoding/json"
-
-func UnmarshalCurrencyTicker(data []byte) ([]CurrencyTicker, error) {
-	var r []CurrencyTicker
-	err := json.Unmarshal(data, &r)
-	return r, err
-}
-
 type CurrencyTicker struct {
 	ID                string   `json:"id"`
 	Currency          string   `json:"currency"`
@@ -46,4 +38,29 @@ type Interval struct {
 	VolumeChangePct    string `json:"volume_change_pct"`
 	MarketCapChange    string `json:"market_cap_change"`
 	MarketCapChangePct string `json:"market_cap_change_pct"`
+}
+
+type CurrencyMetadata struct {
+	ID                  string `json:"id"`
+	OriginalSymbol      string `json:"original_symbol"`
+	Name                string `json:"name"`
+	Description         string `json:"description"`
+	WebsiteURL          string `json:"website_url"`
+	LogoURL             string `json:"logo_url"`
+	BlogURL             string `json:"blog_url"`
+	DiscordURL          string `json:"discord_url"`
+	FacebookURL         string `json:"facebook_url"`
+	GithubURL           string `json:"github_url"`
+	MediumURL           string `json:"medium_url"`
+	RedditURL           string `json:"reddit_url"`
+	TelegramURL         string `json:"telegram_url"`
+	TwitterURL          string `json:"twitter_url"`
+	WhitepaperURL       string `json:"whitepaper_url"`
+	YoutubeURL          string `json:"youtube_url"`
+	LinkedinURL         string `json:"linkedin_url"`
+	BitcointalkURL      string `json:"bitcointalk_url"`
+	BlockExplorerURL    string `json:"block_explorer_url"`
+	ReplacedBy          string `json:"replaced_by"`
+	MarketsCount        string `json:"markets_count"`
+	CryptocontrolCoinID string `json:"cryptocontrol_coin_id"`
 }
