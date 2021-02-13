@@ -162,3 +162,15 @@ func BenchmarkGetCurrenciesSparkline45(b *testing.B) {
 		c.GetCurrenciesSparkline([]string{"BTC"}, &start, nil, nil)
 	}
 }
+
+func BenchmarkGetCurrenciesSparkline45All(b *testing.B) {
+	c, err := gnomics.NewGnomics(demoApiKey)
+	if err != nil {
+		b.Errorf("couldn't create client %v", err)
+	}
+	start := time.Now().AddDate(0,0,-45)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		c.GetCurrenciesSparkline(nil, &start, nil, nil)
+	}
+}
