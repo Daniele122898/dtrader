@@ -8,8 +8,6 @@ import (
 	"net/http"
 )
 
-
-
 var client = http.Client{}
 
 func getRequest(endpoint string, queryParams QueryParams) ([]byte, error) {
