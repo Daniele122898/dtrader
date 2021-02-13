@@ -1,19 +1,11 @@
 package gnomics
 
-// TODO check if this is actually needed
+import (
+	"dtrader/pkg/gnomics/api"
+)
 
-type gnomics struct {}
+type gnomics = api.Gnomics
 
-type Gnomics interface {
-
-}
-
-func NewGnomics(apiKey string) (Gnomics, error) {
-	if err := Authenticate(apiKey); err != nil {
-		return nil, err
-	}
-
-	// THIS IS VERY IMPORTANT. Otherwise all receiver funcs will always copy the val.
-	// It must be a reference from the start
-	return &gnomics{}, nil
+func NewGnomics(apiKey string) (*gnomics, error) {
+	return api.NewGnomics(apiKey)
 }

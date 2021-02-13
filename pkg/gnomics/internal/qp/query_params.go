@@ -1,4 +1,4 @@
-package gnomics
+package qp
 
 import (
 	"net/url"

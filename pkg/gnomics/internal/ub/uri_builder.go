@@ -1,4 +1,4 @@
-package gnomics
+package ub
 
 import (
 	"dtrader/pkg/gnomics"

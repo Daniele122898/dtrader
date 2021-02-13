@@ -2,6 +2,7 @@ package gnomics
 
 import (
 	"bytes"
+	"dtrader/pkg/gnomics/internal/qp"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
@@ -10,7 +11,7 @@ import (
 
 var client = http.Client{}
 
-func prepareQueryForAuth(q *QueryParams) error {
+func prepareQueryForAuth(q *qp.QueryParams) error {
 	if *q == nil {
 		*q = make(map[string]string)
 	}
@@ -21,7 +22,7 @@ func prepareQueryForAuth(q *QueryParams) error {
 }
 
 // Will execute a get-request, inject the api key if it exists and then parse the data.
-func getRequestParsed(endpoint string, queryParams QueryParams, data *interface{}) error {
+func getRequestParsed(endpoint string, queryParams qp.QueryParams, data *interface{}) error {
 	if err := prepareQueryForAuth(&queryParams); err != nil {
 		return err
 	}
@@ -35,7 +36,7 @@ func getRequestParsed(endpoint string, queryParams QueryParams, data *interface{
 }
 
 // Will execute a getRequest and inject the api key if it exists
-func getRequest(endpoint string, queryParams QueryParams) ([]byte, error) {
+func getRequest(endpoint string, queryParams qp.QueryParams) ([]byte, error) {
 	if err := prepareQueryForAuth(&queryParams); err != nil {
 		return nil, err
 	}
@@ -44,7 +45,7 @@ func getRequest(endpoint string, queryParams QueryParams) ([]byte, error) {
 }
 
 // Will execute a postRequest and inject the api key if it exists
-func postRequest(endpoint string, queryParams QueryParams, body interface{}) ([]byte, error) {
+func postRequest(endpoint string, queryParams qp.QueryParams, body interface{}) ([]byte, error) {
 	if err := prepareQueryForAuth(&queryParams); err != nil {
 		return nil, err
 	}
@@ -53,7 +54,7 @@ func postRequest(endpoint string, queryParams QueryParams, body interface{}) ([]
 }
 
 // General request function. This just executes and passes the errors or data.
-func request(endpoint string, httpMethod string, queryParams QueryParams, body interface{}) ([]byte, error) {
+func request(endpoint string, httpMethod string, queryParams qp.QueryParams, body interface{}) ([]byte, error) {
 	url := endpoint
 	if queryParams != nil {
 		url += queryParams.parse()

@@ -1,4 +1,4 @@
-package gnomics
+package models
 
 import "encoding/json"
 

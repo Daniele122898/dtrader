@@ -1,4 +1,6 @@
-package gnomics
+package api
+
+import "dtrader/pkg/gnomics/models"
 
 const (
 	Interval1H = "1h"
@@ -14,6 +16,6 @@ const (
 //	(be aware that the return size is in the orders of mb)
 //	interval: The intervals to request. If nil is passed it will request 1d-ytd
 //	convert: To which currency to convert to. Default is USD
-func GetCurrenciesTicker(ids []string, interval []string, convert *string) ([]CurrencyTicker, error) {
-	var queryParams QueryParams
+func (g *Gnomics) GetCurrenciesTicker(ids []string, interval []string, convert *string) ([]models.CurrencyTicker, error) {
+
 }
