@@ -4,7 +4,6 @@ import (
 	"dtrader/pkg/gnomics/internal/qp"
 	"errors"
 	"net/http"
-	"strings"
 )
 
 type Gnomics struct {
@@ -15,10 +14,6 @@ type Gnomics struct {
 func NewGnomics(apiKey string) (*Gnomics, error) {
 	if len(apiKey) == 0 {
 		return nil, errors.New("you must specify an API key")
-	}
-
-	if strings.HasPrefix(apiKey, "demo") {
-		return nil, errors.New("do not use demo api keys but request your own")
 	}
 
 	// THIS IS VERY IMPORTANT. Otherwise all receiver funcs will always copy the val.

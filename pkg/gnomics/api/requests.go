@@ -10,7 +10,7 @@ import (
 )
 
 // Will execute a get-request, inject the api key if it exists and then parse the data.
-func (g *Gnomics) getRequestParsed(endpoint string, queryParams qp.QueryParams, data *interface{}) error {
+func (g *Gnomics) getRequestParsed(endpoint string, queryParams qp.QueryParams, data interface{}) error {
 	resp, err := g.request(endpoint, http.MethodGet, queryParams, nil)
 	if err != nil {
 		return err
