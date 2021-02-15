@@ -42,7 +42,7 @@ func BenchmarkGetCurrenciesTicker(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		c.GetCurrenciesTicker([]string{"BTC"}, []string{gnomics.Interval1H}, nil)
+		c.GetCurrenciesTicker([]string{"BTC"}, []string{gnomics.Interval1H}, "")
 	}
 }
 
@@ -54,7 +54,7 @@ func BenchmarkGetCurrenciesTickerAll(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		c.GetCurrenciesTicker(nil, []string{gnomics.Interval1H}, nil)
+		c.GetCurrenciesTicker(nil, []string{gnomics.Interval1H}, "")
 	}
 }
 
@@ -117,7 +117,7 @@ func TestGetCurrenciesSparkline(t *testing.T) {
 	}
 
 	start := time.Now().AddDate(0,0,-10)
-	r, err := c.GetCurrenciesSparkline([]string{"BTC"}, start, time.Time{}, nil)
+	r, err := c.GetCurrenciesSparkline([]string{"BTC"}, start, time.Time{}, "")
 	if err != nil {
 		t.Errorf("couldn't get a response %v", err)
 		return
@@ -159,7 +159,7 @@ func BenchmarkGetCurrenciesSparkline45(b *testing.B) {
 	start := time.Now().AddDate(0,0,-45)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		c.GetCurrenciesSparkline([]string{"BTC"}, start, time.Time{}, nil)
+		c.GetCurrenciesSparkline([]string{"BTC"}, start, time.Time{}, "")
 	}
 }
 
@@ -171,6 +171,6 @@ func BenchmarkGetCurrenciesSparkline45All(b *testing.B) {
 	start := time.Now().AddDate(0,0,-45)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		c.GetCurrenciesSparkline(nil, start, time.Time{}, nil)
+		c.GetCurrenciesSparkline(nil, start, time.Time{}, "")
 	}
 }

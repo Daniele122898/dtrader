@@ -14,7 +14,7 @@ import (
 //	(be aware that the return size is in the orders of mb)
 //	interval: The intervals to request. If nil is passed it will request 1d-ytd
 //	convert: To which currency to convert to. Default is USD
-func (g *Gnomics) GetCurrenciesTicker(ids []string, interval []string, convert *string) ([]models.CurrencyTicker, error) {
+func (g *Gnomics) GetCurrenciesTicker(ids []string, interval []string, convert string) ([]models.CurrencyTicker, error) {
 	params := make (qp.QueryParams, 4)
 	l := 12000 // In case ALL currencies are requested
 	if ids != nil {
@@ -24,8 +24,8 @@ func (g *Gnomics) GetCurrenciesTicker(ids []string, interval []string, convert *
 	if interval != nil {
 		params["interval"] = strings.Join(interval, ",")
 	}
-	if convert != nil {
-		params["convert"] = *convert
+	if convert != "" {
+		params["convert"] = convert
 	}
 
 	data := make([]models.CurrencyTicker, l)
@@ -76,7 +76,7 @@ func (g *Gnomics) GetCurrenciesMetadata(ids []string, attributes []string) ([]mo
 //	end: end time of the interval, if not set will choose current time and date
 //	convert: To which currency to convert to. Default is USD
 //	!! NOTE: To get information on a daily level start and end can be a maximum of 45 days apart. Otherwise it wills tart to accumulate the prices and show only specific days.
-func (g *Gnomics) GetCurrenciesSparkline(ids []string, start time.Time, end time.Time, convert *string) ([]models.CurrencySparkline, error) {
+func (g *Gnomics) GetCurrenciesSparkline(ids []string, start time.Time, end time.Time, convert string) ([]models.CurrencySparkline, error) {
 	params := make (qp.QueryParams, 3)
 	l := 12000 // In case ALL currencies are requested
 	if ids != nil {
@@ -90,8 +90,8 @@ func (g *Gnomics) GetCurrenciesSparkline(ids []string, start time.Time, end time
 	if !end.IsZero() {
 		params["end"] = end.Format(time.RFC3339)
 	}
-	if convert != nil {
-		params["convert"] = *convert
+	if convert != "" {
+		params["convert"] = convert
 	}
 
 	data := make([]models.CurrencySparkline, l)
