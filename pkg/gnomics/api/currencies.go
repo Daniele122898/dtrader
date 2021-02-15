@@ -28,7 +28,7 @@ func (g *Gnomics) GetCurrenciesTicker(ids []string, interval []string, convert s
 		params["convert"] = convert
 	}
 
-	data := make([]models.CurrencyTicker, l)
+	data := make([]models.CurrencyTicker, 0, l)
 	err := g.getRequestParsed(
 		ub.BuildUrlSt("currencies/ticker"),
 		params,
@@ -56,7 +56,7 @@ func (g *Gnomics) GetCurrenciesMetadata(ids []string, attributes []string) ([]mo
 		params["attributes"] = strings.Join(attributes, ",")
 	}
 
-	data := make([]models.CurrencyMetadata, l)
+	data := make([]models.CurrencyMetadata, 0, l)
 	err := g.getRequestParsed(
 		ub.BuildUrlSt("currencies"),
 		params,
@@ -77,7 +77,7 @@ func (g *Gnomics) GetCurrenciesMetadata(ids []string, attributes []string) ([]mo
 //	convert: To which currency to convert to. Default is USD
 //	!! NOTE: To get information on a daily level start and end can be a maximum of 45 days apart. Otherwise it wills tart to accumulate the prices and show only specific days.
 func (g *Gnomics) GetCurrenciesSparkline(ids []string, start time.Time, end time.Time, convert string) ([]models.CurrencySparkline, error) {
-	params := make (qp.QueryParams, 3)
+	params := make (qp.QueryParams, 5)
 	l := 12000 // In case ALL currencies are requested
 	if ids != nil {
 		params["ids"] = strings.Join(ids, ",")
@@ -94,7 +94,7 @@ func (g *Gnomics) GetCurrenciesSparkline(ids []string, start time.Time, end time
 		params["convert"] = convert
 	}
 
-	data := make([]models.CurrencySparkline, l)
+	data := make([]models.CurrencySparkline, 0, l)
 
 	err := g.getRequestParsed(
 		ub.BuildUrlSt("currencies/sparkline"),
