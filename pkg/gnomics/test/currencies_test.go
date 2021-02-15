@@ -12,7 +12,7 @@ func TestGetCurrenciesTicker(t *testing.T) {
 		t.Errorf("couldn't create client %v", err)
 	}
 
-	r, err := c.GetCurrenciesTicker([]string{"BTC"}, []string{gnomics.Interval1H}, nil)
+	r, err := c.GetCurrenciesTicker([]string{"BTC"}, []string{gnomics.Interval1H}, "")
 	if err != nil {
 		t.Errorf("couldn't get a response %v", err)
 		return
