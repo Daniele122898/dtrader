@@ -16,7 +16,7 @@ func CountRune(b []byte, d rune) int  {
 func CountString(b []byte, s string) int {
 	count := 0
 	n := len(s)
-	rb := make([]uint8, 0, n)
+	rb := make([]uint8, n)
 	// translate the string runes to uints
 	for i, r := range s {
 		rb[i] = uint8(r)
@@ -46,7 +46,6 @@ func CountString(b []byte, s string) int {
 					break
 				}
 			}
-
 		}
 	}
 	return count

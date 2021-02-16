@@ -18,7 +18,7 @@ import (
 //	convert: To which currency to convert to. Default is USD
 func (g *Gnomics) GetCurrenciesTicker(ids []string, interval []string, convert string) ([]models.CurrencyTicker, error) {
 	params := make (qp.QueryParams, 4)
-	l := 12000 // In case ALL currencies are requested
+	l := 0
 	if ids != nil {
 		params["ids"] = strings.Join(ids, ",")
 		l = len(ids)
@@ -30,11 +30,20 @@ func (g *Gnomics) GetCurrenciesTicker(ids []string, interval []string, convert s
 		params["convert"] = convert
 	}
 
-	data := make([]models.CurrencyTicker, 0, l)
-	err := g.getRequestParsed(
+	resp, err := g.getRequest(
 		ub.BuildUrlSt("currencies/ticker"),
-		params,
-		&data)
+		params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if l == 0 {
+		l = bc.CountString(resp, "},{") + 1
+	}
+
+	data := make([]models.CurrencyTicker, 0, l)
+	err = json.Unmarshal(resp, &data)
 
 	if err != nil {
 		return nil, err
@@ -48,34 +57,6 @@ func (g *Gnomics) GetCurrenciesTicker(ids []string, interval []string, convert s
 //	(be aware that the return size is in the orders of mb)
 //	attributes: The attributes to request. If nil is passed it will request 1d-ytd
 func (g *Gnomics) GetCurrenciesMetadata(ids []string, attributes []string) ([]models.CurrencyMetadata, error) {
-	params := make (qp.QueryParams, 3)
-	l := 12000 // In case ALL currencies are requested
-	if ids != nil {
-		params["ids"] = strings.Join(ids, ",")
-		l = len(ids)
-	}
-	if attributes != nil {
-		params["attributes"] = strings.Join(attributes, ",")
-	}
-
-	data := make([]models.CurrencyMetadata, 0, l)
-	err := g.getRequestParsed(
-		ub.BuildUrlSt("currencies"),
-		params,
-		&data)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return data, err
-}
-
-// Fetches Currency data like metadata like description, urls etc.
-//	ids: The internal IDs of currencies that we want to fetch. If nil is passed it will fetch all currencies available
-//	(be aware that the return size is in the orders of mb)
-//	attributes: The attributes to request. If nil is passed it will request 1d-ytd
-func (g *Gnomics) GetCurrenciesMetadataSmart(ids []string, attributes []string) ([]models.CurrencyMetadata, error) {
 	params := make (qp.QueryParams, 3)
 	l := 0 // In case ALL currencies are requested
 	if ids != nil {
@@ -116,7 +97,7 @@ func (g *Gnomics) GetCurrenciesMetadataSmart(ids []string, attributes []string) 
 //	!! NOTE: To get information on a daily level start and end can be a maximum of 45 days apart. Otherwise it wills tart to accumulate the prices and show only specific days.
 func (g *Gnomics) GetCurrenciesSparkline(ids []string, start time.Time, end time.Time, convert string) ([]models.CurrencySparkline, error) {
 	params := make (qp.QueryParams, 5)
-	l := 12000 // In case ALL currencies are requested
+	l := 0 // In case ALL currencies are requested
 	if ids != nil {
 		params["ids"] = strings.Join(ids, ",")
 		l = len(ids)
@@ -132,12 +113,18 @@ func (g *Gnomics) GetCurrenciesSparkline(ids []string, start time.Time, end time
 		params["convert"] = convert
 	}
 
-	data := make([]models.CurrencySparkline, 0, l)
-
-	err := g.getRequestParsed(
+	resp, err := g.getRequest(
 		ub.BuildUrlSt("currencies/sparkline"),
-		params,
-		&data)
+		params)
+	if err != nil {
+		return nil, err
+	}
+
+	if l == 0 {
+		l = bc.CountRune(resp, '{')
+	}
+	data := make([]models.CurrencySparkline, 0, l)
+	err = json.Unmarshal(resp, &data)
 
 	if err != nil {
 		return nil, err

@@ -1,18 +1,22 @@
-package test
+package api
 
 import (
-	"dtrader/pkg/gnomics"
+	"dtrader/pkg/gnomics/internal/bc"
+	"dtrader/pkg/gnomics/internal/qp"
+	"dtrader/pkg/gnomics/internal/ub"
+	"dtrader/pkg/gnomics/models"
+	"encoding/json"
 	"testing"
 	"time"
 )
 
 func TestGetCurrenciesTicker(t *testing.T) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		t.Errorf("couldn't create client %v", err)
 	}
 
-	r, err := c.GetCurrenciesTicker([]string{"BTC"}, []string{gnomics.Interval1H}, "")
+	r, err := c.GetCurrenciesTicker([]string{"BTC"}, []string{"1h"}, "")
 	if err != nil {
 		t.Errorf("couldn't get a response %v", err)
 		return
@@ -35,31 +39,47 @@ func TestGetCurrenciesTicker(t *testing.T) {
 }
 
 func BenchmarkGetCurrenciesTicker(b *testing.B) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		b.Errorf("couldn't create client %v", err)
 	}
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		c.GetCurrenciesTicker([]string{"BTC"}, []string{gnomics.Interval1H}, "")
+		c.GetCurrenciesTicker([]string{"BTC"}, []string{"1h"}, "")
 	}
 }
 
 func BenchmarkGetCurrenciesTickerAll(b *testing.B) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	g, err := NewGnomics(demoApiKey)
 	if err != nil {
 		b.Errorf("couldn't create client %v", err)
 	}
 
+	params := make (qp.QueryParams, 1)
+
+	resp, err := g.getRequest(
+		ub.BuildUrlSt("currencies/ticker"),
+		params)
+	if err != nil {
+		b.Errorf("couldn't make request %v", err)
+	}
+
 	b.ResetTimer()
+
 	for i := 0; i < b.N; i++ {
-		c.GetCurrenciesTicker(nil, []string{gnomics.Interval1H}, "")
+		l := bc.CountString(resp, "},{") + 1
+
+		data := make([]models.CurrencyTicker, 0, l)
+		err = json.Unmarshal(resp, &data)
+		if err != nil {
+			b.Errorf("couldn't marshall %v", err)
+		}
 	}
 }
 
 func TestGetCurrenciesMetadata(t *testing.T) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		t.Errorf("couldn't create client %v", err)
 	}
@@ -87,7 +107,7 @@ func TestGetCurrenciesMetadata(t *testing.T) {
 }
 
 func BenchmarkGetCurrenciesMetadata(b *testing.B) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		b.Errorf("couldn't create client %v", err)
 	}
@@ -98,20 +118,37 @@ func BenchmarkGetCurrenciesMetadata(b *testing.B) {
 	}
 }
 
+
 func BenchmarkGetCurrenciesMetadataAll(b *testing.B) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	g, err := NewGnomics(demoApiKey)
 	if err != nil {
 		b.Errorf("couldn't create client %v", err)
 	}
 
+	params := make (qp.QueryParams, 1)
+
+	resp, err := g.getRequest(
+		ub.BuildUrlSt("currencies"),
+		params)
+	if err != nil {
+		b.Errorf("couldn't make request %v", err)
+	}
+
 	b.ResetTimer()
+
 	for i := 0; i < b.N; i++ {
-		c.GetCurrenciesMetadata(nil, nil)
+		l := bc.CountRune(resp, '{')
+
+		data := make([]models.CurrencyTicker, 0, l)
+		err = json.Unmarshal(resp, &data)
+		if err != nil {
+			b.Errorf("couldn't marshall %v", err)
+		}
 	}
 }
 
 func TestGetCurrenciesSparkline(t *testing.T) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		t.Errorf("couldn't create client %v", err)
 	}
@@ -152,7 +189,7 @@ func TestGetCurrenciesSparkline(t *testing.T) {
 }
 
 func BenchmarkGetCurrenciesSparkline45(b *testing.B) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		b.Errorf("couldn't create client %v", err)
 	}
@@ -164,7 +201,7 @@ func BenchmarkGetCurrenciesSparkline45(b *testing.B) {
 }
 
 func BenchmarkGetCurrenciesSparkline45All(b *testing.B) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		b.Errorf("couldn't create client %v", err)
 	}

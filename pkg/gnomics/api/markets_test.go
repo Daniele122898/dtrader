@@ -1,12 +1,11 @@
-package test
+package api
 
 import (
-	"dtrader/pkg/gnomics"
 	"testing"
 )
 
 func TestGetMarkets(t *testing.T) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		t.Errorf("couldn't create client %v", err)
 	}
@@ -35,7 +34,7 @@ func TestGetMarkets(t *testing.T) {
 }
 
 func BenchmarkTestGetMarkets(b *testing.B) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		b.Errorf("couldn't create client %v", err)
 	}
@@ -47,7 +46,7 @@ func BenchmarkTestGetMarkets(b *testing.B) {
 }
 
 func BenchmarkTestGetMarketsAll(b *testing.B) {
-	c, err := gnomics.NewGnomics(demoApiKey)
+	c, err := NewGnomics(demoApiKey)
 	if err != nil {
 		b.Errorf("couldn't create client %v", err)
 	}
