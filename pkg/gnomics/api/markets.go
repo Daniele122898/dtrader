@@ -30,6 +30,10 @@ func (g *Gnomics) GetMarkets(exchange string, base []string, quote []string) ([]
 		ub.BuildUrlSt("markets"),
 		params)
 
+	if err != nil {
+		return nil, err
+	}
+
 	count := bc.CountRune(resp, '{')
 	data := make([]models.Market, 0, count)
 	err = json.Unmarshal(resp, &data)

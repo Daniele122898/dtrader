@@ -1,9 +1,11 @@
 package api
 
 import (
+	"dtrader/pkg/gnomics/internal/bc"
 	"dtrader/pkg/gnomics/internal/qp"
 	"dtrader/pkg/gnomics/internal/ub"
 	"dtrader/pkg/gnomics/models"
+	"encoding/json"
 	"errors"
 	"strings"
 	"time"
@@ -61,6 +63,42 @@ func (g *Gnomics) GetCurrenciesMetadata(ids []string, attributes []string) ([]mo
 		ub.BuildUrlSt("currencies"),
 		params,
 		&data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return data, err
+}
+
+// Fetches Currency data like metadata like description, urls etc.
+//	ids: The internal IDs of currencies that we want to fetch. If nil is passed it will fetch all currencies available
+//	(be aware that the return size is in the orders of mb)
+//	attributes: The attributes to request. If nil is passed it will request 1d-ytd
+func (g *Gnomics) GetCurrenciesMetadataSmart(ids []string, attributes []string) ([]models.CurrencyMetadata, error) {
+	params := make (qp.QueryParams, 3)
+	l := 0 // In case ALL currencies are requested
+	if ids != nil {
+		params["ids"] = strings.Join(ids, ",")
+		l = len(ids)
+	}
+	if attributes != nil {
+		params["attributes"] = strings.Join(attributes, ",")
+	}
+
+	resp, err := g.getRequest(
+		ub.BuildUrlSt("currencies"),
+		params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if l == 0 {
+		l = bc.CountRune(resp, '{')
+	}
+	data := make([]models.CurrencyMetadata, 0, l)
+	err = json.Unmarshal(resp, &data)
 
 	if err != nil {
 		return nil, err
