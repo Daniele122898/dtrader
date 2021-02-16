@@ -6,3 +6,9 @@ type ExchangeRate struct {
 	Timestamp string `json:"timestamp"`
 }
 
+type ExchangeRateHistory struct {
+	Timestamp string `json:"timestamp"`
+	Rate      string `json:"rate"`
+}
+
+

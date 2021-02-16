@@ -11,7 +11,7 @@ func TestVolume(t *testing.T) {
 		t.Errorf("couldn't create client %v", err)
 	}
 
-	r, err := c.GetVolume(time.Time{}, time.Time{}, "USD")
+	r, err := c.GetVolumeHistory(time.Time{}, time.Time{}, "USD")
 
 	if err != nil {
 		t.Errorf("couldn't get a response: %v", err)

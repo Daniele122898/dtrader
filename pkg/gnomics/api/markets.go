@@ -51,7 +51,7 @@ func (g *Gnomics) GetMarkets(exchange string, base []string, quote []string) ([]
 //	start (required): Start of period
 //	end: End of period, defaults to today if not set
 //	convert: What currency to convert. Defaults to USD
-func (g *Gnomics) GetMarketCap(start time.Time, end time.Time, convert string) ([]models.MarketCap, error) {
+func (g *Gnomics) GetMarketCapHistory(start time.Time, end time.Time, convert string) ([]models.MarketCap, error) {
 	params := make (qp.QueryParams, 4)
 
 	if start.IsZero() {

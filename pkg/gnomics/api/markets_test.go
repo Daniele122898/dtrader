@@ -73,7 +73,7 @@ func TestGetMarketCap(t *testing.T) {
 	}
 
 	start := time.Now().AddDate(0,0,-10)
-	r, err := c.GetMarketCap(start, time.Time{}, "USD")
+	r, err := c.GetMarketCapHistory(start, time.Time{}, "USD")
 
 	if err != nil {
 		t.Errorf("couldn't get a response: %v", err)

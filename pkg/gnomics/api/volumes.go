@@ -13,7 +13,7 @@ import (
 //	start: Set start period. If not set it just fetches form the first possible data point
 //	end: End date of period. If not set today is used
 //	convert: To what currency to convert to. Defaults to USD
-func (g *Gnomics) GetVolume(start time.Time, end time.Time, convert string) ([]models.Volume, error) {
+func (g *Gnomics) GetVolumeHistory(start time.Time, end time.Time, convert string) ([]models.Volume, error) {
 	params := make (qp.QueryParams, 4)
 
 	if !start.IsZero() {

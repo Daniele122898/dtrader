@@ -91,7 +91,7 @@ func (g *Gnomics) GetCurrenciesMetadata(ids []string, attributes []string) ([]mo
 // Fetches Currency Sparkline (Prices)
 //	ids: The internal IDs of currencies that we want to fetch. If nil is passed it will fetch all currencies available
 //	(be aware that the return size is in the orders of mb)
-//	start: start time of the interval
+//	start (required): start time of the interval
 //	end: end time of the interval, if not set will choose current time and date
 //	convert: To which currency to convert to. Default is USD
 //	!! NOTE: To get information on a daily level start and end can be a maximum of 45 days apart. Otherwise it wills tart to accumulate the prices and show only specific days.
