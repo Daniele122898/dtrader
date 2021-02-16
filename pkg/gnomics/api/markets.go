@@ -6,7 +6,9 @@ import (
 	"dtrader/pkg/gnomics/internal/ub"
 	"dtrader/pkg/gnomics/models"
 	"encoding/json"
+	"errors"
 	"strings"
+	"time"
 )
 
 // Fetches Market information about which exchanges provide the exchange between base and quote
@@ -43,5 +45,41 @@ func (g *Gnomics) GetMarkets(exchange string, base []string, quote []string) ([]
 	}
 
 	return data, err
+}
 
+// Get Market Cap history of all crypto assets between the requested time period
+//	start (required): Start of period
+//	end: End of period, defaults to today if not set
+//	convert: What currency to convert. Defaults to USD
+func (g *Gnomics) GetMarketCap(start time.Time, end time.Time, convert string) ([]models.MarketCap, error) {
+	params := make (qp.QueryParams, 4)
+
+	if start.IsZero() {
+		return nil, errors.New("start time must be set")
+	}
+	params["start"] = start.Format(time.RFC3339)
+	if !end.IsZero() {
+		params["end"] = end.Format(time.RFC3339)
+	}
+	if convert != "" {
+		params["convert"] = convert
+	}
+
+	resp, err := g.getRequest(
+		ub.BuildUrlSt("market-cap/history"),
+		params)
+
+	if err != nil {
+		return nil, err
+	}
+
+	count := bc.CountRune(resp, '{')
+	data := make([]models.MarketCap, 0, count)
+	err = json.Unmarshal(resp, &data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return data, err
 }
